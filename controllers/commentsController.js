@@ -28,7 +28,7 @@ export async function createComment(req, res) {
     }
 
     const result = await pool.query(
-      "INSERT INTO comments (comment, post_id) VALUES ($1, $2) RETURNING *",
+      "INSERT INTO comments (body, post_id) VALUES ($1, $2) RETURNING *",
       [body, postId],
     );
 
