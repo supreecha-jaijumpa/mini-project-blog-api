@@ -5,7 +5,7 @@ import {
   createComment,
 } from "../controllers/commentsController.js";
 
-const route = Router();
+const route = Router({ mergeParams: true });
 
 route.get("/", getComments);
 route.post("/", createComment);

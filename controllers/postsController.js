@@ -35,15 +35,15 @@ export async function getPostById(req, res) {
 
 export async function createPost(req, res) {
   try {
-    const { title, content } = req.body;
+    const { title, body } = req.body;
 
-    if (!title || !content) {
-      return res.status(400).json({ error: "Title and content are required" });
+    if (!title || !body) {
+      return res.status(400).json({ error: "Title and body are required" });
     }
 
     const result = await pool.query(
-      "INSERT INTO posts (title, content) VALUES ($1, $2) RETURNING *",
-      [title, content],
+      "INSERT INTO posts (title, body) VALUES ($1, $2) RETURNING *",
+      [title, body],
     );
 
     return res
@@ -56,15 +56,16 @@ export async function createPost(req, res) {
 }
 export async function updatePost(req, res) {
   try {
-    const { title, content } = req.body;
+    const { id } = req.params;
+    const { title, body } = req.body;
 
-    if (!title || !content) {
-      return res.status(400).json({ error: "Title and content are required" });
+    if (!title || !body) {
+      return res.status(400).json({ error: "Title and body are required" });
     }
 
     const result = await pool.query(
-      "UPDATE posts SET title = $1, content = $2 WHERE id = $3 RETURNING *",
-      [title, content, id],
+      "UPDATE posts SET title = $1, body = $2 WHERE id = $3 RETURNING *",
+      [title, body, id],
     );
 
     if (result.rows.length === 0) {
@@ -73,7 +74,7 @@ export async function updatePost(req, res) {
 
     return res.status(200).json({
       message: `Update post id ${id} successfully.`,
-      user: result.rows[0],
+      post: result.rows[0],
     });
   } catch (error) {
     console.error(error);

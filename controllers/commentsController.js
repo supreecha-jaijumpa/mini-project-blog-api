@@ -2,7 +2,7 @@ import pool from "../db/pool.js";
 
 export async function getComments(req, res) {
   try {
-    const postId = req.params.postId;
+    const { postId } = req.params;
     const page = parseInt(req.query.page) || 1;
     const perPage = parseInt(req.query.perPage) || 10;
     const offset = (page - 1) * perPage;
@@ -20,16 +20,16 @@ export async function getComments(req, res) {
 
 export async function createComment(req, res) {
   try {
-    const postId = req.params;
-    const { comment } = req.body;
+    const { postId } = req.params;
+    const { body } = req.body;
 
-    if (!comment) {
-      return res.status(400).json({ error: "Comment is required" });
+    if (!body) {
+      return res.status(400).json({ error: "Body is required" });
     }
 
     const result = await pool.query(
-      "INSERT INTO comments (comment, post_id) VALUES ($1. $2) RETURNING *",
-      [comment, postId],
+      "INSERT INTO comments (comment, post_id) VALUES ($1, $2) RETURNING *",
+      [body, postId],
     );
 
     return res.status(201).json({
